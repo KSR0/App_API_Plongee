@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">AppAPI</string>
+    <string name="title_activity_accueil_compose">AccueilCompose</string>
+</resources>
