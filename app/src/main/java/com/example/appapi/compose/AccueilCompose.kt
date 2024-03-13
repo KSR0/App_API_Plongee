@@ -32,8 +32,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.appapi.R
-import com.example.appapi.compose.ui.ISection
-import com.example.appapi.compose.ui.Membres
+import com.example.appapi.compose.components.ISection
+import com.example.appapi.compose.components.Membres
 import com.example.appapi.compose.ui.theme.AppAPITheme
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -52,26 +52,27 @@ class MainActivity : ComponentActivity() {
                     val section = remember {
                         mutableStateOf<ISection>(Membres())
                     }
-                    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-                    val scope = rememberCoroutineScope()
-                    val onClickOpenMenu = {
-                        scope.launch {
-                            drawerState.open()
-                        }
-                    }
-                    val onClickCloseMenu = {
-                        scope.launch {
-                            drawerState.close()
-                        }
-                    }
+//                    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+//                    val scope = rememberCoroutineScope()
+//                    val onClickOpenMenu = {
+//                        scope.launch {
+//                            drawerState.open()
+//                        }
+//                    }
+//                    val onClickCloseMenu = {
+//                        scope.launch {
+//                            drawerState.close()
+//                        }
+//                    }
 
-                    ModalNavigationDrawer(
-                        drawerContent = { Menu(section = section, onClickCloseMenu = onClickCloseMenu)},
-                        drawerState = drawerState,
-                        modifier = Modifier.width(10.dp)
-                    ) {
-                        Section(section.value, onClickOpenMenu)
-                    }
+//                    ModalNavigationDrawer(
+//                        drawerContent = { Menu(section = section, onClickCloseMenu = onClickCloseMenu)},
+//                        drawerState = drawerState,
+//                        modifier = Modifier.width(10.dp)
+//                    ) {
+                        // Section(section.value, onClickOpenMenu)
+                        Section(section.value)
+//                    }
 
                 }
             }
@@ -96,7 +97,7 @@ fun Menu(section: MutableState<ISection>, onClickCloseMenu: () -> Job) {
 }
 
 @Composable
-fun Section(section: ISection, onClickOpenMenu: () -> Job) {
+fun Section(section: ISection) {
     val indexPage = remember {
         mutableStateOf(PageEnum.LISTE)
     }
@@ -107,7 +108,7 @@ fun Section(section: ISection, onClickOpenMenu: () -> Job) {
         ) {
             IconButton(
                 onClick = {
-                    onClickOpenMenu()
+                    // onClickOpenMenu()
                 },
                 modifier = Modifier.size(60.dp)
             ) {
