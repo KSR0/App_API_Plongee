@@ -2,14 +2,16 @@ package com.example.appapi.compose
 
 import ApiManager
 import android.app.AlertDialog
+import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
 import android.util.AttributeSet
 import android.util.Log
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.Toast
+import android.widget.ScrollView
+import android.widget.Spinner
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -50,6 +52,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Calendar
 
 
 class MainActivity : ComponentActivity() {
@@ -152,13 +155,13 @@ fun Section(section: ISection, onClickOpenMenu: () -> Job) {
             Spacer(modifier = Modifier.weight(0.1f))
             OutlinedButton(
                 onClick = {
-                    indexPage.value = PageEnum.SAISIE_MODIFICATION
+                    indexPage.value = PageEnum.CREATION_MODIFICATION_DIVE
                 },
-                enabled = (indexPage.value != PageEnum.SAISIE_MODIFICATION),
+                enabled = (indexPage.value != PageEnum.CREATION_MODIFICATION_DIVE),
                 modifier = Modifier.padding(horizontal = 7.dp)
             ) {
                 Text(
-                    text = "Saisie/Modification"
+                    text = "Gestion Plongee"
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
@@ -174,62 +177,163 @@ fun Section(section: ISection, onClickOpenMenu: () -> Job) {
     }
 }
 
-class SaisieModificationView @JvmOverloads constructor(
+class CreationModifPlongeeView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = 0
-) : LinearLayout(context, attrs, defStyle) {
+) : ScrollView(context, attrs, defStyle) {
 
-    private val editTextNom: EditText
-    private val editTextPrenom: EditText
-    private val editTextMail: EditText
-    private val editTextMotDePasse: EditText
-    private val editTextPhotoProfil: EditText
-    private val editTextMembers: EditText
+    private val spinnerLieu: Spinner
+    private val spinnerBateau: Spinner
+    private val editTextDate: EditText
+    private val spinnerMoment: Spinner
+    private val editTextMin: EditText
+    private val editTextMax: EditText
+    private val spinnerNiveau: Spinner
+    private val spinnerPilote: Spinner
+    private val spinnerSecurite: Spinner
+    private val spinnerDirecteur: Spinner
     private val buttonAjouter: Button
-    private val buttonLister : Button
 
     init {
-        inflate(context, R.layout.saisie_modification_view, this)
+        inflate(context, R.layout.creation_modif_plongee_view, this)
 
-        editTextNom = findViewById(R.id.editTextNom)
-        editTextPrenom = findViewById(R.id.editTextPrenom)
-        editTextMail = findViewById(R.id.editTextMail)
-        editTextMotDePasse = findViewById(R.id.editTextMotDePasse)
-        editTextPhotoProfil = findViewById(R.id.editTextPhotoProfil)
-        editTextMembers = findViewById(R.id.editTextMembers)
+        spinnerLieu = findViewById(R.id.lieu)
+        spinnerBateau = findViewById(R.id.bateau)
+        editTextDate = findViewById(R.id.date)
+        spinnerMoment = findViewById(R.id.moment)
+        editTextMin = findViewById(R.id.min)
+        editTextMax = findViewById(R.id.max)
+        spinnerNiveau = findViewById(R.id.niveau)
+        spinnerPilote = findViewById(R.id.pilote)
+        spinnerSecurite = findViewById(R.id.securite)
+        spinnerDirecteur = findViewById(R.id.directeur)
 
-        buttonLister = findViewById(R.id.buttonLister)
-        buttonLister.setOnClickListener {
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    val members = ApiManager.getMemberList()
-                    withContext(Dispatchers.Main) {
-                        AlertDialog.Builder(context)
-                            .setTitle("Membres")
-                            .setMessage(members.joinToString("\n"))
-                            .setPositiveButton("OK") { dialog, _ ->
-                                dialog.dismiss()
-                            }
-                            .show()
-                    }
-                } catch (e: Exception) {
-                    Log.e("SaisieModificationView", "Error fetching member list: ${e.message}")
-                }
-            }
+        fun showDatePickerDialog() {
+            val calendar = Calendar.getInstance()
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
+
+            val datePickerDialog = DatePickerDialog(context, { _, selectedYear, selectedMonth, dayOfMonth ->
+                val formattedMonth = String.format("%02d", selectedMonth + 1)
+                val formattedDayOfMonth = String.format("%02d", dayOfMonth)
+                val selectedDate = "$selectedYear-${formattedMonth}-$formattedDayOfMonth"
+                editTextDate.setText(selectedDate)
+            }, year, month, dayOfMonth)
+
+            datePickerDialog.show()
+        }
+
+        editTextDate.setOnClickListener {
+            showDatePickerDialog()
         }
 
 
 
+
+        val adapterBateau = ArrayAdapter<Item>(context, android.R.layout.simple_spinner_dropdown_item, mutableListOf())
+        val adapterLieu = ArrayAdapter<Item>(context, android.R.layout.simple_spinner_dropdown_item, mutableListOf())
+        val adapterMoment = ArrayAdapter<Item>(context, android.R.layout.simple_spinner_dropdown_item, mutableListOf())
+        val adapterNiveau = ArrayAdapter<Item>(context, android.R.layout.simple_spinner_dropdown_item, mutableListOf())
+        val adapterPilote = ArrayAdapter<Item>(context, android.R.layout.simple_spinner_dropdown_item, mutableListOf())
+        val adapterSecurite = ArrayAdapter<Item>(context, android.R.layout.simple_spinner_dropdown_item, mutableListOf())
+        val adapterDirecteur = ArrayAdapter<Item>(context, android.R.layout.simple_spinner_dropdown_item, mutableListOf())
+
+        spinnerLieu.adapter = adapterLieu
+        spinnerMoment.adapter = adapterMoment
+        spinnerNiveau.adapter = adapterNiveau
+        spinnerBateau.adapter = adapterBateau
+        spinnerPilote.adapter = adapterPilote
+        spinnerSecurite.adapter = adapterSecurite
+        spinnerDirecteur.adapter = adapterDirecteur
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val bateaux = ApiManager.getBateauxList()
+                val lieux = ApiManager.getLieuxList()
+                val moments = ApiManager.getMomentsList()
+                val niveaux = ApiManager.getNiveauxList()
+                val pilote = ApiManager.getAdherentsList()
+                val securite = ApiManager.getAdherentsList()
+                val directeur = ApiManager.getAdherentsList()
+
+                withContext(Dispatchers.Main) {
+                    adapterBateau.clear()
+                    adapterBateau.addAll(bateaux)
+                    adapterBateau.notifyDataSetChanged()
+
+                    adapterLieu.clear()
+                    adapterLieu.addAll(lieux)
+                    adapterLieu.notifyDataSetChanged()
+
+                    adapterMoment.clear()
+                    adapterMoment.addAll(moments)
+                    adapterMoment.notifyDataSetChanged()
+
+                    adapterNiveau.clear()
+                    adapterNiveau.addAll(niveaux)
+                    adapterNiveau.notifyDataSetChanged()
+
+                    adapterPilote.clear()
+                    adapterPilote.addAll(pilote)
+                    adapterPilote.notifyDataSetChanged()
+
+                    adapterSecurite.clear()
+                    adapterSecurite.addAll(securite)
+                    adapterSecurite.notifyDataSetChanged()
+
+                    adapterDirecteur.clear()
+                    adapterDirecteur.addAll(directeur)
+                    adapterDirecteur.notifyDataSetChanged()
+                }
+            } catch (e: Exception) {
+                Log.e("CreationModifPlongeeView", "Error fetching bateaux list: ${e.message}")
+            }
+        }
+
         buttonAjouter = findViewById(R.id.buttonAjouter)
         buttonAjouter.setOnClickListener {
-            val nom = editTextNom.text.toString()
-            val prenom = editTextPrenom.text.toString()
-            val mail = editTextMail.text.toString()
-            val motDePasse = editTextMotDePasse.text.toString()
-            val photoProfil = editTextPhotoProfil.text.toString()
+            val lieu = spinnerLieu.selectedItem as Item
+            val lieuId = lieu.id
+            val bateau = spinnerBateau.selectedItem as Item
+            val bateauId = bateau.id
+            val date = editTextDate.text.toString()
+            val moment = spinnerMoment.selectedItem as Item
+            val momentId = moment.id
+            val min = editTextMin.text.toString().toInt()
+            val max = editTextMax.text.toString().toInt()
+            val niveau = spinnerNiveau.selectedItem as Item
+            val niveauId = niveau.id
+            val pilote = spinnerPilote.selectedItem as Item
+            val piloteId = pilote.id
+            val securite = spinnerSecurite.selectedItem as Item
+            val securiteId = securite.id
+            val directeur = spinnerDirecteur.selectedItem as Item
+            val directeurId = directeur.id
 
+            Log.d("Summary", "Lieu : $lieuId, Bateau : $bateauId, Date : $date, Moment : $momentId, Min : $min, Max : $max, Niveau : $niveauId, Pilote : $piloteId, Securite : $securiteId, Directeur : $directeurId")
 
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val response = ApiManager.addDive(
+                        lieuId,
+                        bateauId,
+                        date,
+                        momentId,
+                        min,
+                        max,
+                        niveauId,
+                        piloteId,
+                        securiteId,
+                        directeurId
+                    )
+                    Log.d("ResponseAPI",response)
+                } catch (e: Exception) {
+                    Log.e("ButtonClickListener", "Error: ${e.message}", e)
+
+                }
+            }
         }
     }
 }
@@ -244,11 +348,11 @@ fun Component(modifier: Modifier, indexPage: MutableState<PageEnum>, section: IS
         when (indexPage.value) {
             PageEnum.LISTE -> section.Liste(modifier = Modifier)
             PageEnum.INSERTION -> section.Insertion(modifier = Modifier)
-            PageEnum.SAISIE_MODIFICATION -> {
+            PageEnum.CREATION_MODIFICATION_DIVE -> {
                 AndroidView(
                     modifier = Modifier.fillMaxSize(),
                     factory = { context ->
-                        SaisieModificationView(context)
+                        CreationModifPlongeeView(context)
                     }
                 )
             }
