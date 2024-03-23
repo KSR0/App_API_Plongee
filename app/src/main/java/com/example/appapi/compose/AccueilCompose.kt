@@ -106,15 +106,15 @@ fun Section(section: ISection) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
-            IconButton(
-                onClick = {
-                    // onClickOpenMenu()
-                },
-                modifier = Modifier.size(60.dp)
-            ) {
-                Icon(painter = painterResource(id = R.drawable.ic_menu), contentDescription = "")
-            }
-            Spacer(modifier = Modifier.weight(0.5f))
+//            IconButton(
+//                onClick = {
+//                    // onClickOpenMenu()
+//                },
+//                modifier = Modifier.size(60.dp)
+//            ) {
+//                Icon(painter = painterResource(id = R.drawable.ic_menu), contentDescription = "")
+//            }
+            Spacer(modifier = Modifier.weight(1f))
             OutlinedButton(
                 onClick = {
                     indexPage.value = PageEnum.LISTE
@@ -126,7 +126,7 @@ fun Section(section: ISection) {
                     text = "Liste"
                 )
             }
-            Spacer(modifier = Modifier.weight(0.1f))
+            Spacer(modifier = Modifier.weight(1f))
             OutlinedButton(
                 onClick = {
                     indexPage.value = PageEnum.INSERTION
