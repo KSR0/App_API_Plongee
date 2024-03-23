@@ -1,4 +1,3 @@
-import android.util.Log
 import com.example.appapi.compose.Item
 import org.json.JSONArray
 import org.json.JSONObject
@@ -9,44 +8,6 @@ import java.net.URL
 
 object ApiManager {
     private var API_URL = ""
-    fun getDivesList(): MutableList<String> {
-        API_URL = "https://dev-restandroid.users.info.unicaen.fr/api/plongees"
-        val url = URL(API_URL)
-        val connection = url.openConnection() as HttpURLConnection
-        connection.requestMethod = "GET"
-
-        val response = mutableListOf<String>()
-        try {
-            val inputStream = BufferedReader(InputStreamReader(connection.inputStream))
-            val jsonArray = JSONArray(inputStream.use { it.readText() })
-            for (i in 0 until jsonArray.length()) {
-                val jsonObject = jsonArray.getJSONObject(i)
-                val id = jsonObject.getString("id")
-                val lieu = jsonObject.getString("lieu")
-                val bateau = jsonObject.getString("bateau")
-                val date = jsonObject.getString("date")
-                val moment = jsonObject.getString("moment")
-                val min_plongeurs = jsonObject.getString("min_plongeurs")
-                val max_plongeurs = jsonObject.getString("max_plongeurs")
-                val niveau = jsonObject.getString("niveau")
-                val active = jsonObject.getString("active")
-                val etat = jsonObject.getString("etat")
-                val pilote = jsonObject.getString("pilote")
-                val securite_de_surface = jsonObject.getString("securite_de_surface")
-                val directeur_de_plongee = jsonObject.getString("directeur_de_plongee")
-                response.add("$id: $lieu: $date: $bateau")
-            }
-            inputStream.close()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            connection.disconnect()
-        }
-
-        response.sortBy { it.substringBefore(":").toInt() }
-
-        return response
-    }
 
     fun addDive(lieu: Int, bateau: Int, date: String, moment: Int, minPlongeurs: Int, maxPlongeurs: Int, niveau: Int, pilote: Int, securiteDeSurface: Int, directeurDePlongee: Int): String {
         API_URL = "https://dev-restandroid.users.info.unicaen.fr/api/plongees"
@@ -58,7 +19,6 @@ object ApiManager {
         connection.doOutput = true
 
         val jsonInputString = JSONObject().apply {
-            put("id",100)
             put("lieu", lieu)
             put("bateau", bateau)
             put("date", date)
