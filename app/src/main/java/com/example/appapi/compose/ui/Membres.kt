@@ -85,7 +85,7 @@ class Membres: ISection {
         Column(modifier = modifier.padding(16.dp)) {
             Text(text = "Liste des plongées", style = MaterialTheme.typography.headlineMedium)
             Spacer(modifier = Modifier.height(10.dp))
-            Button(onClick = {indexPage.value = PageEnum.CREATION_MODIFICATION_DIVE}) {
+            Button(onClick = {indexPage.value = PageEnum.CREATION_PLONGEE}) {
                 Text(text = "Ajouter une plongée")
             }
             Spacer(modifier = Modifier.height(10.dp))
@@ -104,7 +104,7 @@ class Membres: ISection {
     }
 
     @Composable
-    override fun PlongeeDetail(modifier: Modifier, plongee: Plongee) {
+    override fun PlongeeDetail(modifier: Modifier, plongee: Plongee, indexPage: MutableState<PageEnum>) {
 
         var niveaux by remember { mutableStateOf<List<Niveaux>>(emptyList()) }
         var participants by remember { mutableStateOf<List<Participant>>(emptyList()) }
@@ -139,6 +139,12 @@ class Membres: ISection {
             Text("Plongeurs Min: ${plongee.min_plongeurs}")
             Text("Plongeurs Max: ${plongee.max_plongeurs}")
             Text("Nombre Participants: ${getNombreParticipants(participants,plongee.id)}")
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Button(onClick = {indexPage.value = PageEnum.MODIFICATION_PLONGEE}) {
+                Text(text = "Modifier la plongée")
+            }
         }
     }
 

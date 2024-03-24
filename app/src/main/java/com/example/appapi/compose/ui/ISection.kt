@@ -21,5 +21,5 @@ interface ISection {
     )
 
     @Composable
-    fun PlongeeDetail(modifier: Modifier, plongee: Plongee)
+    fun PlongeeDetail(modifier: Modifier, plongee: Plongee, indexPage: MutableState<PageEnum>)
 }

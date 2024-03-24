@@ -175,7 +175,7 @@ fun Component(modifier: Modifier, indexPage: MutableState<PageEnum>, section: IS
         when (indexPage.value) {
             PageEnum.LISTE -> section.Liste(modifier = Modifier)
             PageEnum.INSERTION -> section.Insertion(modifier = Modifier)
-            PageEnum.CREATION_MODIFICATION_DIVE -> {
+            PageEnum.CREATION_PLONGEE -> {
                 AndroidView(
                     modifier = Modifier.fillMaxSize(),
                     factory = { context ->
@@ -186,9 +186,10 @@ fun Component(modifier: Modifier, indexPage: MutableState<PageEnum>, section: IS
             PageEnum.GESTION_PLONGEE -> section.Gestion_plongee(modifier = Modifier, indexPage, selectedPlongee)
             PageEnum.PLONGEE_DETAIL -> {
                 selectedPlongee.value?.let { plongee ->
-                    section.PlongeeDetail(modifier = Modifier, plongee)
+                    section.PlongeeDetail(modifier = Modifier, plongee, indexPage)
                 }
             }
+            PageEnum.MODIFICATION_PLONGEE -> { Text(text = "Modification")}
         }
     }
 }
