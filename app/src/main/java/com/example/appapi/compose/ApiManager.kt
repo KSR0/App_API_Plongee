@@ -1,24 +1,26 @@
-import com.example.appapi.compose.Item
-import org.json.JSONArray
+import android.util.Log
+import com.example.appapi.compose.dataClass.Adherent
+import com.example.appapi.compose.dataClass.Bateau
+import com.example.appapi.compose.dataClass.Lieux
+import com.example.appapi.compose.dataClass.Moment
+import com.example.appapi.compose.dataClass.Niveaux
+import com.example.appapi.compose.dataClass.Participant
+import com.example.appapi.compose.dataClass.Plongee
+import com.google.gson.Gson
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
+import java.io.OutputStreamWriter
 
 object ApiManager {
     private var API_URL = ""
 
     fun addDive(lieu: Int, bateau: Int, date: String, moment: Int, minPlongeurs: Int, maxPlongeurs: Int, niveau: Int, pilote: Int, securiteDeSurface: Int, directeurDePlongee: Int): String {
-        API_URL = "https://dev-restandroid.users.info.unicaen.fr/api/plongees"
-        val url = URL(API_URL)
-        val connection = url.openConnection() as HttpURLConnection
-        connection.requestMethod = "POST"
-        connection.setRequestProperty("Content-Type", "application/json; utf-8")
-        connection.setRequestProperty("Accept", "application/json")
-        connection.doOutput = true
+        val API_URL = "https://dev-restandroid.users.info.unicaen.fr/api/plongees"
 
-        val jsonInputString = JSONObject().apply {
+        val plongeeJson = JSONObject().apply {
             put("lieu", lieu)
             put("bateau", bateau)
             put("date", date)
@@ -26,53 +28,57 @@ object ApiManager {
             put("min_plongeurs", minPlongeurs)
             put("max_plongeurs", maxPlongeurs)
             put("niveau", niveau)
-            put("active", true)
-            put("etat", 1)
             put("pilote", pilote)
             put("securite_de_surface", securiteDeSurface)
             put("directeur_de_plongee", directeurDePlongee)
-        }.toString()
-
-        connection.outputStream.use { os ->
-            val input = jsonInputString.toByteArray(charset("utf-8"))
-            os.write(input, 0, input.size)
         }
 
-        val response = StringBuilder()
+        var response = ""
         try {
+            val url = URL(API_URL)
+            val connection = url.openConnection() as HttpURLConnection
+            connection.requestMethod = "POST"
+            connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8")
+            connection.setRequestProperty("Accept", "application/json")
+            connection.doOutput = true
+
+            val outputStreamWriter = OutputStreamWriter(connection.outputStream)
+            outputStreamWriter.write(plongeeJson.toString())
+            outputStreamWriter.flush()
+
             val inputStream = BufferedReader(InputStreamReader(connection.inputStream))
             var inputLine: String?
+            val responseBuilder = StringBuilder()
             while (inputStream.readLine().also { inputLine = it } != null) {
-                response.append(inputLine)
+                responseBuilder.append(inputLine)
             }
             inputStream.close()
+
+            response = responseBuilder.toString()
+
+            connection.disconnect()
         } catch (e: Exception) {
             e.printStackTrace()
-        } finally {
-            connection.disconnect()
         }
 
-        return response.toString()
+        return response
     }
 
-    fun getBateauxList(): List<Item> {
+    fun getBateauxList(): List<Bateau> {
         API_URL = "https://dev-restandroid.users.info.unicaen.fr/api/bateaux"
         val url = URL(API_URL)
         val connection = url.openConnection() as HttpURLConnection
         connection.requestMethod = "GET"
 
-        val bateauxList = mutableListOf<Item>()
+        val bateauxList = mutableListOf<Bateau>()
         try {
-            val inputStream = BufferedReader(InputStreamReader(connection.inputStream))
-            val jsonArray = JSONArray(inputStream.use { it.readText() })
-            for (i in 0 until jsonArray.length()) {
-                val jsonObject = jsonArray.getJSONObject(i)
-                val id = jsonObject.getInt("id")
-                val libelle = jsonObject.getString("libelle")
-                val item = Item(id, listOf(libelle))
-                bateauxList.add(item)
-            }
-            inputStream.close()
+            val inputStream = connection.inputStream
+            val responseText = inputStream.bufferedReader().use { it.readText() }
+            println("Response Text: $responseText")
+
+            val gson = Gson()
+            val bateauxArray = gson.fromJson(responseText, Array<Bateau>::class.java)
+            bateauxList.addAll(bateauxArray)
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
@@ -82,24 +88,21 @@ object ApiManager {
         return bateauxList
     }
 
-    fun getLieuxList(): List<Item> {
+    fun getLieuxList(): List<Lieux> {
         API_URL = "https://dev-restandroid.users.info.unicaen.fr/api/lieux"
         val url = URL(API_URL)
         val connection = url.openConnection() as HttpURLConnection
         connection.requestMethod = "GET"
 
-        val lieuxList = mutableListOf<Item>()
+        val lieuxList = mutableListOf<Lieux>()
         try {
-            val inputStream = BufferedReader(InputStreamReader(connection.inputStream))
-            val jsonArray = JSONArray(inputStream.use { it.readText() })
-            for (i in 0 until jsonArray.length()) {
-                val jsonObject = jsonArray.getJSONObject(i)
-                val id = jsonObject.getInt("id")
-                val libelle = jsonObject.getString("libelle")
-                val item = Item(id, listOf(libelle))
-                lieuxList.add(item)
-            }
-            inputStream.close()
+            val inputStream = connection.inputStream
+            val responseText = inputStream.bufferedReader().use { it.readText() }
+            println("Response Text: $responseText")
+
+            val gson = Gson()
+            val lieuxArray = gson.fromJson(responseText, Array<Lieux>::class.java)
+            lieuxList.addAll(lieuxArray)
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
@@ -109,24 +112,21 @@ object ApiManager {
         return lieuxList
     }
 
-    fun getMomentsList(): List<Item> {
+    fun getMomentsList(): List<Moment> {
         API_URL = "https://dev-restandroid.users.info.unicaen.fr/api/moments"
         val url = URL(API_URL)
         val connection = url.openConnection() as HttpURLConnection
         connection.requestMethod = "GET"
 
-        val momentsList = mutableListOf<Item>()
+        val momentsList = mutableListOf<Moment>()
         try {
-            val inputStream = BufferedReader(InputStreamReader(connection.inputStream))
-            val jsonArray = JSONArray(inputStream.use { it.readText() })
-            for (i in 0 until jsonArray.length()) {
-                val jsonObject = jsonArray.getJSONObject(i)
-                val id = jsonObject.getInt("id")
-                val libelle = jsonObject.getString("libelle")
-                val item = Item(id, listOf(libelle))
-                momentsList.add(item)
-            }
-            inputStream.close()
+            val inputStream = connection.inputStream
+            val responseText = inputStream.bufferedReader().use { it.readText() }
+            println("Response Text: $responseText")
+
+            val gson = Gson()
+            val momentsArray = gson.fromJson(responseText, Array<Moment>::class.java)
+            momentsList.addAll(momentsArray)
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
@@ -136,24 +136,22 @@ object ApiManager {
         return momentsList
     }
 
-    fun getNiveauxList(): List<Item> {
-        API_URL = "https://dev-restandroid.users.info.unicaen.fr/api/niveaux"
+    fun getNiveauxList(): List<Niveaux> {
+        val API_URL = "https://dev-restandroid.users.info.unicaen.fr/api/niveaux"
         val url = URL(API_URL)
         val connection = url.openConnection() as HttpURLConnection
         connection.requestMethod = "GET"
 
-        val niveauxList = mutableListOf<Item>()
+        val niveauxList = mutableListOf<Niveaux>()
         try {
-            val inputStream = BufferedReader(InputStreamReader(connection.inputStream))
-            val jsonArray = JSONArray(inputStream.use { it.readText() })
-            for (i in 0 until jsonArray.length()) {
-                val jsonObject = jsonArray.getJSONObject(i)
-                val id = jsonObject.getInt("id")
-                val libelle = jsonObject.getString("libelle")
-                val item = Item(id, listOf(libelle))
-                niveauxList.add(item)
-            }
-            inputStream.close()
+            val inputStream = connection.inputStream
+            val responseText = inputStream.bufferedReader().use { it.readText() }
+            println("Response Text: $responseText")
+
+            val gson = Gson()
+            val niveauxArray = gson.fromJson(responseText, Array<Niveaux>::class.java)
+            niveauxList.addAll(niveauxArray)
+
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
@@ -163,25 +161,21 @@ object ApiManager {
         return niveauxList
     }
 
-    fun getAdherentsList(): List<Item> {
+    fun getAdherentsList(): List<Adherent> {
         API_URL = "https://dev-restandroid.users.info.unicaen.fr/api/adherents"
         val url = URL(API_URL)
         val connection = url.openConnection() as HttpURLConnection
         connection.requestMethod = "GET"
 
-        val adherentsList = mutableListOf<Item>()
+        val adherentsList = mutableListOf<Adherent>()
         try {
-            val inputStream = BufferedReader(InputStreamReader(connection.inputStream))
-            val jsonArray = JSONArray(inputStream.use { it.readText() })
-            for (i in 0 until 5) {
-                val jsonObject = jsonArray.getJSONObject(i)
-                val nom = jsonObject.getString("nom")
-                val prenom = jsonObject.getString("prenom")
-                val id = jsonObject.getInt("id")
-                val item = Item(id,listOf(nom,prenom))
-                adherentsList.add(item)
-            }
-            inputStream.close()
+            val inputStream = connection.inputStream
+            val responseText = inputStream.bufferedReader().use { it.readText() }
+            println("Response Text: $responseText")
+
+            val gson = Gson()
+            val adherentsArray = gson.fromJson(responseText, Array<Adherent>::class.java)
+            adherentsList.addAll(adherentsArray)
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
@@ -189,6 +183,55 @@ object ApiManager {
         }
 
         return adherentsList
+    }
+
+    fun getPlongeesList(): List<Plongee> {
+        API_URL = "https://dev-restandroid.users.info.unicaen.fr/api/plongees"
+        val url = URL(API_URL)
+        val connection = url.openConnection() as HttpURLConnection
+        connection.requestMethod = "GET"
+
+        val plongeesList = mutableListOf<Plongee>()
+        try {
+            connection.connect()
+            val inputStream = connection.inputStream
+            val responseText = inputStream.bufferedReader().use { it.readText() }
+            println("Response Text: $responseText")
+
+            val gson = Gson()
+            val plongeesArray = gson.fromJson(responseText, Array<Plongee>::class.java)
+            plongeesList.addAll(plongeesArray)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            connection.disconnect()
+        }
+
+        return plongeesList
+    }
+
+    fun getParticipantsList(): List<Participant> {
+        API_URL = "https://dev-restandroid.users.info.unicaen.fr/api/participants"
+        val url = URL(API_URL)
+        val connection = url.openConnection() as HttpURLConnection
+        connection.requestMethod = "GET"
+
+        val participantsList = mutableListOf<Participant>()
+        try {
+            connection.connect()
+            val inputStream = connection.inputStream
+            val responseText = inputStream.bufferedReader().use { it.readText() }
+
+            val gson = Gson()
+            val participantsArray = gson.fromJson(responseText, Array<Participant>::class.java)
+            participantsList.addAll(participantsArray)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            connection.disconnect()
+        }
+
+        return participantsList
     }
 
 }
