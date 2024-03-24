@@ -8,5 +8,9 @@ data class Personne(
     val nom: String,
     val prenom: String,
     val actif: Boolean,
-)
+){
+    override fun toString(): String {
+        return "$nom $prenom"
+    }
+}
 

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#adaaaa"
+        android:text="Lieu"
+        android:textStyle="bold"
+        android:layout_marginTop="30dp"
+        android:textAlignment="center"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Spinner
+        android:id="@+id/modiflieu"
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:hint="Lieu" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:background="#adaaaa"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:text="Bateau"
+        android:layout_marginTop="30dp"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Spinner
+        android:id="@+id/modifbateau"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:hint="Bateau" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:background="#adaaaa"
+        android:textAlignment="center"
+        android:text="Date"
+        android:layout_marginTop="30dp"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/modifdate"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:hint="Choisissez une date"
+        android:editable="false"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:background="#adaaaa"
+        android:textAlignment="center"
+        android:text="Moment"
+        android:layout_marginTop="30dp"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Spinner
+        android:id="@+id/modifmoment"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:hint="Moment" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:background="#adaaaa"
+        android:textAlignment="center"
+        android:text="Plongeurs"
+        android:layout_marginTop="30dp"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/modifmin"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:hint="Choisissez un minimum de plongeurs" />
+
+    <EditText
+        android:id="@+id/modifmax"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:hint="Choisissez un maximum de plongeurs" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:background="#adaaaa"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:text="Niveau"
+        android:layout_marginTop="30dp"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Spinner
+        android:id="@+id/modifniveau"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:hint="Niveau" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:background="#adaaaa"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:text="Pilote"
+        android:layout_marginTop="30dp"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Spinner
+        android:id="@+id/modifpilote"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:hint="Pilote" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:background="#adaaaa"
+        android:textAlignment="center"
+        android:layout_marginTop="30dp"
+        android:text="Securite de surface"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Spinner
+        android:id="@+id/modifsecurite"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:hint="Securite de surface" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:background="#adaaaa"
+        android:textAlignment="center"
+        android:layout_marginTop="30dp"
+        android:text="Directeur"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Spinner
+        android:id="@+id/modifdirecteur"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:hint="Directeur de plongee" />
+
+    <Button
+        android:id="@+id/buttonModifier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Modifier"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"/>
+
+</LinearLayout>

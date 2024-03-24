@@ -259,4 +259,52 @@ object ApiManager {
         return participantsList
     }
 
+    fun updateDive(plongee: Plongee, newPlongee: Plongee): String {
+        val API_URL = "https://dev-restandroid.users.info.unicaen.fr/api/plongees/${plongee.id}"
+        val url = URL(API_URL)
+        val connection = url.openConnection() as HttpURLConnection
+        connection.requestMethod = "PUT"
+        connection.setRequestProperty("Content-Type", "application/json; utf-8")
+        connection.setRequestProperty("Accept", "application/json")
+        connection.doOutput = true
+
+        val jsonInputString = JSONObject().apply {
+            put("lieu", newPlongee.lieu)
+            put("bateau", newPlongee.bateau)
+            put("date", newPlongee.date)
+            put("moment", newPlongee.moment)
+            put("min_plongeurs", newPlongee.min_plongeurs)
+            put("max_plongeurs", newPlongee.max_plongeurs)
+            put("niveau", newPlongee.niveau)
+            put("active", newPlongee.active)
+            put("etat", newPlongee.etat)
+            put("pilote", newPlongee.pilote)
+            put("securite_de_surface", newPlongee.securite_de_surface)
+            put("directeur_de_plongee", newPlongee.directeur_de_plongee)
+        }.toString()
+
+        connection.outputStream.use { os ->
+            val input = jsonInputString.toByteArray(Charsets.UTF_8)
+            os.write(input, 0, input.size)
+        }
+
+        val response = StringBuilder()
+        try {
+            connection.connect()
+            val inputStream = BufferedReader(InputStreamReader(connection.inputStream))
+            var inputLine: String?
+            while (inputStream.readLine().also { inputLine = it } != null) {
+                response.append(inputLine)
+            }
+            inputStream.close()
+        } catch (e: Exception) {
+            Log.e("Error", "Error: ${e.message}", e)
+        } finally {
+            connection.disconnect()
+        }
+
+        return response.toString()
+    }
+
+
 }

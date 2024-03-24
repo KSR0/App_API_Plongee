@@ -37,7 +37,8 @@ import com.example.appapi.compose.dataClass.Plongee
 import com.example.appapi.compose.ui.ISection
 import com.example.appapi.compose.ui.Membres
 import com.example.appapi.compose.ui.theme.AppAPITheme
-import com.example.appapi.compose.vueView.CreationModifPlongeeView
+import com.example.appapi.compose.vueView.CreationPlongeeView
+import com.example.appapi.compose.vueView.ModificationPlongeeView
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -179,7 +180,7 @@ fun Component(modifier: Modifier, indexPage: MutableState<PageEnum>, section: IS
                 AndroidView(
                     modifier = Modifier.fillMaxSize(),
                     factory = { context ->
-                        CreationModifPlongeeView(context)
+                        CreationPlongeeView(context)
                     }
                 )
             }
@@ -189,7 +190,12 @@ fun Component(modifier: Modifier, indexPage: MutableState<PageEnum>, section: IS
                     section.PlongeeDetail(modifier = Modifier, plongee, indexPage)
                 }
             }
-            PageEnum.MODIFICATION_PLONGEE -> { Text(text = "Modification")}
+            PageEnum.MODIFICATION_PLONGEE -> { AndroidView(
+                modifier = Modifier.fillMaxSize(),
+                factory = { context ->
+                    ModificationPlongeeView(context, plongee = selectedPlongee.value)
+                }
+            )}
         }
     }
 }
