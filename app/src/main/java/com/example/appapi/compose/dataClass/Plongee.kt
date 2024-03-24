@@ -8,6 +8,7 @@ data class Plongee(
     val lieu: Int,
     val bateau: Int,
     val date: String,
+    val moment: Int,
     val min_plongeurs: Int,
     val max_plongeurs: Int,
     val niveau: Int,

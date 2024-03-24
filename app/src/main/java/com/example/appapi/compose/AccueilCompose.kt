@@ -1,6 +1,5 @@
 package com.example.appapi.compose
 
-import ApiManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -34,6 +33,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.appapi.R
+import com.example.appapi.compose.dataClass.Plongee
 import com.example.appapi.compose.ui.ISection
 import com.example.appapi.compose.ui.Membres
 import com.example.appapi.compose.ui.theme.AppAPITheme
@@ -167,6 +167,7 @@ fun Section(section: ISection, onClickOpenMenu: () -> Job) {
 
 @Composable
 fun Component(modifier: Modifier, indexPage: MutableState<PageEnum>, section: ISection) {
+    val selectedPlongee = remember { mutableStateOf<Plongee?>(null) }
     return Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.Center
@@ -182,7 +183,12 @@ fun Component(modifier: Modifier, indexPage: MutableState<PageEnum>, section: IS
                     }
                 )
             }
-            PageEnum.GESTION_PLONGEE -> section.Gestion_plongee(modifier = Modifier, indexPage)
+            PageEnum.GESTION_PLONGEE -> section.Gestion_plongee(modifier = Modifier, indexPage, selectedPlongee)
+            PageEnum.PLONGEE_DETAIL -> {
+                selectedPlongee.value?.let { plongee ->
+                    section.PlongeeDetail(modifier = Modifier, plongee)
+                }
+            }
         }
     }
 }

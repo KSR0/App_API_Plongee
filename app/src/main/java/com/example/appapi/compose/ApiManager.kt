@@ -5,6 +5,7 @@ import com.example.appapi.compose.dataClass.Lieux
 import com.example.appapi.compose.dataClass.Moment
 import com.example.appapi.compose.dataClass.Niveaux
 import com.example.appapi.compose.dataClass.Participant
+import com.example.appapi.compose.dataClass.Personne
 import com.example.appapi.compose.dataClass.Plongee
 import com.google.gson.Gson
 import org.json.JSONObject
@@ -183,6 +184,30 @@ object ApiManager {
         }
 
         return adherentsList
+    }
+
+    fun getPersonnesList(): List<Personne> {
+        API_URL = "https://dev-restandroid.users.info.unicaen.fr/api/personnes"
+        val url = URL(API_URL)
+        val connection = url.openConnection() as HttpURLConnection
+        connection.requestMethod = "GET"
+
+        val personnesList = mutableListOf<Personne>()
+        try {
+            val inputStream = connection.inputStream
+            val responseText = inputStream.bufferedReader().use { it.readText() }
+            println("Response Text: $responseText")
+
+            val gson = Gson()
+            val personnesArray = gson.fromJson(responseText, Array<Personne>::class.java)
+            personnesList.addAll(personnesArray)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            connection.disconnect()
+        }
+
+        return personnesList
     }
 
     fun getPlongeesList(): List<Plongee> {

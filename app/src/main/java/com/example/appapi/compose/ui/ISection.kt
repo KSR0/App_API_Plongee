@@ -14,5 +14,12 @@ interface ISection {
     fun Insertion(modifier: Modifier)
 
     @Composable
-    fun Gestion_plongee(modifier: Modifier, indexPage: MutableState<PageEnum>)
+    fun Gestion_plongee(
+        modifier: Modifier,
+        indexPage: MutableState<PageEnum>,
+        selectedPlongee: MutableState<Plongee?>
+    )
+
+    @Composable
+    fun PlongeeDetail(modifier: Modifier, plongee: Plongee)
 }
