@@ -140,19 +140,20 @@ class ModificationPlongeeView @JvmOverloads constructor(
         }
 
         buttonModifier.setOnClickListener {
-            val newDate = Date.text.toString()
+            val newLieu = (Lieu.selectedItem as Lieux).id
             val newBateau = (Bateau.selectedItem as Bateau).id
-            val newNiveau = (Niveau.selectedItem as Niveaux).id
+            val newDate = Date.text.toString()
             val newMoment = (Moment.selectedItem as Moment).id
             val newMin = Min.text.toString().toInt()
             val newMax = Max.text.toString().toInt()
+            val newNiveau = (Niveau.selectedItem as Niveaux).id
             val newPilote = (Pilote.selectedItem as Personne).id
             val newSecurite = (Securite.selectedItem as Personne).id
             val newDirecteur = (Directeur.selectedItem as Personne).id
-            val newLieu = (Lieu.selectedItem as Lieux).id
 
-            val modifiedPlongee = plongee?.let { it1 -> Plongee(it1.id,newLieu,newBateau,newDate,newMoment,newMin,newMax,newNiveau,plongee.active,plongee.niveau,newPilote,newSecurite,newDirecteur) }
-
+            val modifiedPlongee = plongee?.let { it1 -> Plongee(it1.id,newLieu,newBateau,newDate,newMoment,newMin,newMax,newNiveau,plongee.active,plongee.etat,newPilote,newSecurite,newDirecteur) }
+            Log.d("MODIFIER",modifiedPlongee.toString())
+            Log.d("BASE",plongee.toString())
             CoroutineScope(Dispatchers.IO).launch {
                 withContext(Dispatchers.IO) {
                     try {

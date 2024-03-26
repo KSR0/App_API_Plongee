@@ -1,8 +1,11 @@
 package com.example.appapi.compose
 
 enum class PageEnum {
-    LISTE,
-    INSERTION,
+    CREATION_ADHERENT,
+    GESTION_ADHERENT,
+    ADHERENT_DETAIL,
+    MODIFICATION_ADHERENT,
+
     CREATION_PLONGEE,
     GESTION_PLONGEE,
     PLONGEE_DETAIL,

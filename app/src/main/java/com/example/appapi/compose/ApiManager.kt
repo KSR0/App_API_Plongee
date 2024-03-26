@@ -269,6 +269,7 @@ object ApiManager {
         connection.doOutput = true
 
         val jsonInputString = JSONObject().apply {
+            put("id", newPlongee.id)
             put("lieu", newPlongee.lieu)
             put("bateau", newPlongee.bateau)
             put("date", newPlongee.date)
@@ -282,6 +283,8 @@ object ApiManager {
             put("securite_de_surface", newPlongee.securite_de_surface)
             put("directeur_de_plongee", newPlongee.directeur_de_plongee)
         }.toString()
+
+        Log.d("JSON",jsonInputString)
 
         connection.outputStream.use { os ->
             val input = jsonInputString.toByteArray(Charsets.UTF_8)
@@ -306,5 +309,48 @@ object ApiManager {
         return response.toString()
     }
 
+    fun updateAdherent(adherent: Adherent, newAdherent: Adherent): String {
+        val API_URL = "https://dev-restandroid.users.info.unicaen.fr/api/adherents/${adherent.id}"
+        val url = URL(API_URL)
+        val connection = url.openConnection() as HttpURLConnection
+        connection.requestMethod = "PUT"
+        connection.setRequestProperty("Content-Type", "application/json; utf-8")
+        connection.setRequestProperty("Accept", "application/json")
+        connection.doOutput = true
+
+        val jsonInputString = JSONObject().apply {
+            put("id", newAdherent.id)
+            put("licence", newAdherent.licence)
+            put("date_certificat_medical", newAdherent.date_certificat_medical)
+            put("forfait", newAdherent.forfait)
+            put("niveau", newAdherent.niveau)
+            put("nom", newAdherent.nom)
+            put("prenom", newAdherent.prenom)
+            put("email", newAdherent.email)
+            put("actif", newAdherent.actif)
+        }.toString()
+
+        connection.outputStream.use { os ->
+            val input = jsonInputString.toByteArray(Charsets.UTF_8)
+            os.write(input, 0, input.size)
+        }
+
+        val response = StringBuilder()
+        try {
+            connection.connect()
+            val inputStream = BufferedReader(InputStreamReader(connection.inputStream))
+            var inputLine: String?
+            while (inputStream.readLine().also { inputLine = it } != null) {
+                response.append(inputLine)
+            }
+            inputStream.close()
+        } catch (e: Exception) {
+            Log.e("Error", "Error: ${e.message}", e)
+        } finally {
+            connection.disconnect()
+        }
+
+        return response.toString()
+    }
 
 }

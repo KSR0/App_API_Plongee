@@ -11,7 +11,7 @@ data class Adherent(
     val niveau : Int,
     val nom: String,
     val prenom: String,
-    val mail: String,
+    val email: String,
     val actif : Boolean
 ){
     override fun toString(): String {

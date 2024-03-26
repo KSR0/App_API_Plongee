@@ -4,22 +4,30 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import com.example.appapi.compose.PageEnum
+import com.example.appapi.compose.dataClass.Adherent
 import com.example.appapi.compose.dataClass.Plongee
 
 interface ISection {
     @Composable
-    fun Liste(modifier: Modifier)
+    fun GestionAdherent(modifier: Modifier,  indexPage: MutableState<PageEnum>, selectedAdherent: MutableState<Adherent?>)
 
     @Composable
-    fun Insertion(modifier: Modifier)
+    fun DetailsAdherent(modifier: Modifier, adherent: Adherent, indexPage: MutableState<PageEnum>)
 
     @Composable
-    fun Gestion_plongee(
+    fun ModificationAdherent(modifier: Modifier, adherent: Adherent)
+
+    @Composable
+    fun CreationAdherent(modifier: Modifier)
+
+
+    @Composable
+    fun GestionPlongee(
         modifier: Modifier,
         indexPage: MutableState<PageEnum>,
         selectedPlongee: MutableState<Plongee?>
     )
 
     @Composable
-    fun PlongeeDetail(modifier: Modifier, plongee: Plongee, indexPage: MutableState<PageEnum>)
+    fun PlongeeDetails(modifier: Modifier, plongee: Plongee, indexPage: MutableState<PageEnum>)
 }
